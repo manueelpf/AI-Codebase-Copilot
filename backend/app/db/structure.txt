@@ -1,0 +1,68 @@
+repositories
+Stores one imported GitHub repo.
+-id
+-name
+-github_url
+-branch
+-local_path
+-status
+-last_indexed_at
+-created_at
+-updated_at
+
+files
+Stores each file found in repo.
+-id
+-repository_id
+-path
+-language
+-file_type
+-size_bytes
+-content_hash
+-created_at
+
+chunks
+Stores chunked content references.
+-id
+-repository_id
+-file_id
+-chunk_index
+-text
+-summary
+-start_line
+-end_line
+-metadata_json
+
+chat_sessions
+Groups conversations by repo.
+-id
+-repository_id
+-title
+-created_at
+
+chat_messages
+Stores user and assistant messages.
+-id
+-session_id
+-role
+-content
+-created_at
+
+api_keys
+Stores encrypted provider keys.
+-id
+-provider
+-encrypted_value
+-created_at
+-updated_at
+
+ingestion_jobs
+Tracks long-running processing.
+
+-id
+-repository_id
+-job_type
+-status
+-started_at
+-finished_at
+-error_message
