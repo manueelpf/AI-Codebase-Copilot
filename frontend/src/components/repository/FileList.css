@@ -1,9 +1,106 @@
+.file-list {
+  overflow: hidden;
+}
+
 .file-list__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   padding: var(--space-5) var(--space-6);
   border-bottom: 1px solid var(--color-border);
 }
 
+.file-list__toolbar {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+}
+
+.file-list__search {
+  width: 100%;
+  max-width: 520px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: rgba(255,255,255,0.03);
+  color: var(--color-text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.file-list__search::placeholder {
+  color: var(--color-text-muted);
+}
+
+.file-list__search:focus {
+  border-color: #6366f1;
+  background: rgba(255,255,255,0.06);
+}
+
+.file-list__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.file-list__toggle:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--color-border);
+}
+
+.file-list__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.file-list__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.file-list__chevron {
+  font-size: 18px;
+  color: var(--color-text-muted);
+  transition: transform 0.25s ease;
+}
+
+.file-list__chevron--open {
+  transform: rotate(180deg);
+}
+
+.file-list__content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.file-list__content--open {
+  grid-template-rows: 1fr;
+}
+
 .file-list__body {
+  min-height: 0;
   max-height: 600px;
   overflow: auto;
 }
@@ -15,6 +112,26 @@
 
 .file-list__item:last-child {
   border-bottom: none;
+}
+
+.file-list__item--button {
+  width: 100%;
+  display: block;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.18s ease;
+}
+
+.file-list__item--button:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.file-list__item--button:active {
+  transform: scale(0.995);
 }
 
 .file-list__path {
