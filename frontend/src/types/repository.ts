@@ -25,3 +25,8 @@ export type CreateRepositoryPayload = {
   github_url: string
   branch?: string | null
 }
+
+export type RepositoryFileContent = {
+  path: string
+  content: string
+}

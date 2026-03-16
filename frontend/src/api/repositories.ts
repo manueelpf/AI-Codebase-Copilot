@@ -3,6 +3,7 @@ import type {
   CreateRepositoryPayload,
   Repository,
   RepositoryFile,
+  RepositoryFileContent,
 } from "../types/repository"
 
 export async function fetchRepositories(): Promise<Repository[]> {
@@ -15,8 +16,14 @@ export async function fetchRepository(id: number): Promise<Repository> {
   return response.data
 }
 
+
 export async function fetchRepositoryFiles(id: number): Promise<RepositoryFile[]> {
   const response = await apiClient.get<RepositoryFile[]>(`/repositories/${id}/files`)
+  return response.data
+}
+
+export async function fetchRepositoryFileContent(repositoryId: number, fileId: number): Promise<RepositoryFileContent> {
+  const response = await apiClient.get<RepositoryFileContent>(`/repositories/${repositoryId}/files/${fileId}/content`)
   return response.data
 }
 

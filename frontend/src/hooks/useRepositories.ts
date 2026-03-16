@@ -3,6 +3,7 @@ import {
   createRepository,
   fetchRepositories,
   fetchRepository,
+  fetchRepositoryFileContent,
   fetchRepositoryFiles,
 } from "../api/repositories"
 
@@ -26,6 +27,14 @@ export function useRepositoryFiles(repositoryId: number) {
     queryKey: ["repository-files", repositoryId],
     queryFn: () => fetchRepositoryFiles(repositoryId),
     enabled: Number.isFinite(repositoryId) && repositoryId > 0,
+  })
+}
+
+export function useRepositoryFileContent(repositoryId: number, fileId: number | null){
+  return useQuery({
+    queryKey: ["repository-file-content", repositoryId, fileId],
+    queryFn: () => fetchRepositoryFileContent(repositoryId, fileId as number),
+    enabled: Number.isFinite(repositoryId) && repositoryId > 0 && fileId !== null,
   })
 }
 
