@@ -1,0 +1,50 @@
+.repository-import {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.repository-import__controls {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.repository-import__input {
+  flex: 1;
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  background: var(--color-surface);
+}
+
+.repository-import__input:focus {
+  border-color: #94a3b8;
+}
+
+.repository-import__button {
+  min-height: 48px;
+  padding: 0 var(--space-5);
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+.repository-import__button:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.repository-import__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .repository-import__controls {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,31 @@
+.file-list__header {
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.file-list__body {
+  max-height: 600px;
+  overflow: auto;
+}
+
+.file-list__item {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.file-list__item:last-child {
+  border-bottom: none;
+}
+
+.file-list__path {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  word-break: break-all;
+}
+
+.file-list__meta {
+  margin-top: var(--space-1);
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
