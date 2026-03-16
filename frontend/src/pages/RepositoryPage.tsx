@@ -1,15 +1,26 @@
 import { useParams } from "react-router-dom"
 import { AppLayout } from "../components/layout/AppLayout"
 import { FileList } from "../components/repository/FileList"
-import { useRepository, useRepositoryFiles } from "../hooks/useRepositories"
+import { useRepository, useRepositoryFileContent, useRepositoryFiles } from "../hooks/useRepositories"
 import "./RepositoryPage.css"
+import type { RepositoryFile } from "../types/repository"
+import { useState } from "react"
+import { FilePreviewModal } from "../components/repository/FilePreviewModal"
 
 export function RepositoryPage() {
   const params = useParams()
   const repositoryId = Number(params.repositoryId)
 
+  const [selectedFile, setSelectedFile] = useState<RepositoryFile | null>(null)
+
   const { data: repository, isLoading: repoLoading } = useRepository(repositoryId)
   const { data: files = [], isLoading: filesLoading } = useRepositoryFiles(repositoryId)
+
+  const { data: fileContentData, isLoading: fileContentLoading } = useRepositoryFileContent(repositoryId, selectedFile?.id ?? null)
+
+  const handleClosePreview = () => {
+    setSelectedFile(null)
+  }
 
   return (
     <AppLayout>
@@ -25,15 +36,24 @@ export function RepositoryPage() {
 
             <div className="repository-page__badges">
               <span className="badge">{repository.status}</span>
-              <span className="badge">Files indexed: {files.length}</span>
+              <span className="badge">Files found: {files.length}</span>
             </div>
           </section>
 
           {filesLoading ? (
-            <div className="card loading-box">Loading files...</div>
+            <div className="card loading-box">Loading file preview...</div>
           ) : (
-            <FileList files={files} />
+            <FileList files={files} onSelectFile={setSelectedFile} />
           )}
+
+          <FilePreviewModal
+            isOpen={!!selectedFile}
+            file={selectedFile}
+            content={fileContentData?.content ?? ""}
+            isLoading={fileContentLoading}
+            onClose={handleClosePreview}
+          />
+          
         </div>
       )}
     </AppLayout>
