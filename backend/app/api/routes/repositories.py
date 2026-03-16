@@ -6,10 +6,12 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.db.models import Repository, File
 from app.schemas.repository import RepositoryCreate, RepositoryResponse
-from app.schemas.file import FileResponse
+from app.schemas.file import FileResponse, FileContentResponse
 from app.services.ingestion.github_loader import clone_repository, extract_repo_name
 from app.services.ingestion.file_scanner import scan_repository_files
 from app.core.config import settings
+
+from pathlib import Path
 
 router = APIRouter(prefix="/repositories", tags=["repositories"])
 
@@ -91,4 +93,39 @@ def get_repository_files(repository_id: int, db: Session = Depends(get_db)) -> l
         .filter(File.repository_id == repository_id)
         .order_by(File.path.asc())
         .all()
+    )
+
+@router.get("/{repository_id}/files/{file_id}/content", response_model=FileContentResponse)
+def get_repository_file_content(repository_id: int, file_id: int, db: Session = Depends(get_db)) -> FileContentResponse:
+    repo = db.query(Repository).filter(Repository.id == repository_id).first()
+    if not repo:
+        raise HTTPException(status_code=404, detail="Repository not found")
+
+    file = (
+        db.query(File)
+        .filter(File.id == file_id, File.repository_id == repository_id)
+        .first()
+    )
+
+    if not file:
+        raise HTTPException(status_code=404, detail="File not found")
+
+    if not repo.local_path:
+        raise HTTPException(status_code=404, detail="Repository local path is not available")
+
+    absolute_path = Path(repo.local_path) / file.path
+
+    if not absolute_path.exists() or not absolute_path.is_file():
+        raise HTTPException(status_code=404, detail="File content not found on disk")
+
+    try:
+        content = absolute_path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        content = absolute_path.read_text(encoding="utf-8", errors="replace")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Error reading file content: {str(exc)}") from exc
+
+    return FileContentResponse(
+        path=file.path,
+        content=content
     )

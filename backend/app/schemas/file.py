@@ -13,3 +13,7 @@ class FileResponse(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+class FileContentResponse(BaseModel):
+    path: str
+    content: str
