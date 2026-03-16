@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react"
 import type { RepositoryFile } from "../../types/repository"
+import { formatBytes } from "../../utils/formatBytes"
 import "./FileList.css"
 
 type Props = {
@@ -76,7 +77,7 @@ export function FileList({ files, onSelectFile }: Props) {
               >
                 <div className="file-list__path">{file.path}</div>
                 <div className="file-list__meta">
-                  {file.language ?? "unknown"} · {file.file_type ?? "other"} · {file.size_bytes} bytes
+                  {file.language ?? "unknown"} · {file.file_type ?? "other"} · {formatBytes(file.size_bytes)}
                 </div>
               </button>
             ))
