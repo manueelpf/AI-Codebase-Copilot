@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: codecopilot-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-codecopilot}
+      POSTGRES_USER: ${POSTGRES_USER:-codecopilot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-codecopilot}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-codecopilot} -d ${POSTGRES_DB:-codecopilot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: codecopilot-backend
+    restart: unless-stopped
+    env_file:
+      - backend/.env.example
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://codecopilot:codecopilot@postgres:5432/codecopilot}
+      APP_ENV: ${APP_ENV:-development}
+      APP_NAME: ${APP_NAME:-AI Codebase Copilot}
+      APP_VERSION: ${APP_VERSION:-0.1.0}
+      WORKSPACE_DIR: ${WORKSPACE_DIR:-/app/workspace}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+      - ./workspace:/app/workspace
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: codecopilot-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: http://localhost:${BACKEND_PORT:-8000}
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+
+volumes:
+  postgres_data:
