@@ -1,0 +1,27 @@
+.repository-page {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.repository-page__summary {
+  padding: var(--space-6);
+}
+
+.repository-page__title {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+}
+
+.repository-page__url {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+
+.repository-page__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
